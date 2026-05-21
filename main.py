@@ -211,6 +211,18 @@ def calculate_building_analysis(building):
     if roi_score >= 75:
         recommended_strategy.append("Prioritize renovation for investment upside")
 
+    executive_summary = f"""
+    This building has an upgrade score of {final_score} and an ESG risk level of {esg_risk_level}.
+
+    The analysis indicates {priority.lower()} renovation priority with {roi_level.lower()}.
+
+    Main drivers include:
+    - {", ".join(risk_flags) if risk_flags else "No major risk factors"}
+
+    Recommended actions:
+    - {", ".join(recommended_strategy)}
+    """
+
     return {
         "upgrade_score": final_score,
         "priority": priority,
@@ -222,6 +234,7 @@ def calculate_building_analysis(building):
         "roi_score": roi_score,
         "roi_level": roi_level,
         "recommended_strategy": recommended_strategy,
+        "executive_summary": executive_summary,
         "esg_risk_score": esg_risk_score,
         "esg_risk_level": esg_risk_level,
         "risk_flags": risk_flags,
