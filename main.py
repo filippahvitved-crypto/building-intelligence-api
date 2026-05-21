@@ -4,6 +4,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
+from fastapi import Header
 
 #------------------------------
 #2.App
@@ -303,6 +304,14 @@ def score_roi_potential(building) -> int:
 
     return score
 
+def validate_api_key(api_key):
+
+    valid_keys = [
+        "test123"
+    ]
+
+    return api_key in valid_keys
+
 #------------------------------
 #6.Helper functions
 #------------------------------
@@ -510,7 +519,15 @@ def normalize_address(q: str):
     }
 
 @app.get("/analyze-real-address")
-def analyze_real_address(q: str):
+def analyze_real_address(
+    q: str,
+    x_api_key: str = Header(None)
+):
+
+    if not validate_api_key(x_api_key):
+        return {
+            "error": "Invalid API key"
+        }
 
     response = requests.get(
         f"https://api.dataforsyningen.dk/adresser?q={q}"
