@@ -179,12 +179,23 @@ def calculate_building_analysis(building):
     else:
         esg_risk_level = "Low"
 
+    heat_pump_score = score_heat_pump_compatibility(building)
+
+    if heat_pump_score >= 75:
+        heat_pump_recommendation = "High compatibility for heat pump"
+    elif heat_pump_score >= 45:
+        heat_pump_recommendation = "Medium compatibility for heat pump"
+    else:
+        heat_pump_recommendation = "Low compatibility for heat pump"
+
     return {
         "upgrade_score": final_score,
         "priority": priority,
         "recommended_action": recommended_action,
         "target_customers": target_customers,
         "confidence": confidence,
+        "heat_pump_compatibility_score": heat_pump_score,
+        "heat_pump_recommendation": heat_pump_recommendation,
         "esg_risk_score": esg_risk_score,
         "esg_risk_level": esg_risk_level,
         "risk_flags": risk_flags,
@@ -196,6 +207,35 @@ def calculate_building_analysis(building):
             "energy_consumption_score": consumption_score
         }
     }
+
+def score_heat_pump_compatibility(building) -> int:
+
+    score = 50
+
+    heating_type = building["heating_type"].lower()
+    building_year = building["building_year"]
+    energy_consumption = building["energy_consumption_kwh_m2"]
+
+    if heating_type in ["oil", "olie", "gas"]:
+        score += 25
+
+    if building_year >= 1998:
+        score += 15
+    elif building_year < 1979:
+        score -= 15
+
+    if energy_consumption < 120:
+        score += 15
+    elif energy_consumption > 200:
+        score -= 15
+
+    if score > 100:
+        score = 100
+
+    if score < 0:
+        score = 0
+
+    return score
 
 #------------------------------
 #6.Helper functions
