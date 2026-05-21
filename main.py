@@ -462,3 +462,11 @@ def test_bbr_building(data: BBRInput):
         "status_code": response.status_code,
         "text": response.text
     }
+
+@app.get("/")
+def root():
+    return {
+        "status": "online",
+        "product": "Building Intelligence API",
+        "version": "1.0"
+    }
