@@ -197,6 +197,20 @@ def calculate_building_analysis(building):
     else:
         roi_level = "Low ROI potential"
 
+    recommended_strategy = []
+
+    if building["heating_type"] in ["oil", "gas"]:
+        recommended_strategy.append("Replace existing heating system")
+
+    if building["energy_consumption_kwh_m2"] > 180:
+        recommended_strategy.append("Improve insulation")
+
+    if heat_pump_score >= 70:
+        recommended_strategy.append("Install heat pump")
+
+    if roi_score >= 75:
+        recommended_strategy.append("Prioritize renovation for investment upside")
+
     return {
         "upgrade_score": final_score,
         "priority": priority,
@@ -207,6 +221,7 @@ def calculate_building_analysis(building):
         "heat_pump_recommendation": heat_pump_recommendation,
         "roi_score": roi_score,
         "roi_level": roi_level,
+        "recommended_strategy": recommended_strategy,
         "esg_risk_score": esg_risk_score,
         "esg_risk_level": esg_risk_level,
         "risk_flags": risk_flags,
