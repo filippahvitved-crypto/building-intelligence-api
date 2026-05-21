@@ -188,6 +188,15 @@ def calculate_building_analysis(building):
     else:
         heat_pump_recommendation = "Low compatibility for heat pump"
 
+    roi_score = score_roi_potential(building)
+
+    if roi_score >= 75:
+        roi_level = "High ROI potential"
+    elif roi_score >= 45:
+        roi_level = "Medium ROI potential"
+    else:
+        roi_level = "Low ROI potential"
+
     return {
         "upgrade_score": final_score,
         "priority": priority,
@@ -196,6 +205,8 @@ def calculate_building_analysis(building):
         "confidence": confidence,
         "heat_pump_compatibility_score": heat_pump_score,
         "heat_pump_recommendation": heat_pump_recommendation,
+        "roi_score": roi_score,
+        "roi_level": roi_level,
         "esg_risk_score": esg_risk_score,
         "esg_risk_level": esg_risk_level,
         "risk_flags": risk_flags,
@@ -228,6 +239,33 @@ def score_heat_pump_compatibility(building) -> int:
         score += 15
     elif energy_consumption > 200:
         score -= 15
+
+    if score > 100:
+        score = 100
+
+    if score < 0:
+        score = 0
+
+    return score
+
+def score_roi_potential(building) -> int:
+
+    score = 50
+
+    energy_label = building["energy_label"].upper()
+    building_year = building["building_year"]
+    energy_consumption = building["energy_consumption_kwh_m2"]
+
+    if energy_label in ["E", "F", "G"]:
+        score += 25
+
+    if building_year < 1979:
+        score += 15
+
+    if energy_consumption > 180:
+        score += 20
+    elif energy_consumption < 80:
+        score -= 20
 
     if score > 100:
         score = 100
