@@ -553,7 +553,10 @@ def analyze_real_address(
         supabase.table("api_usage").insert({
             "endpoint": "/analyze-real-address",
             "address_query": q,
-            "api_key_prefix": x_api_key[:4]
+            "normalized_address": first_address["adressebetegnelse"],
+            "api_key_prefix": x_api_key[:4],
+            "status": "success",
+            "score": analysis["upgrade_score"]
         }).execute()
 
     response = requests.get(
