@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
 from fastapi import Header
+import os
 
 #------------------------------
 #2.App
@@ -307,7 +308,7 @@ def score_roi_potential(building) -> int:
 def validate_api_key(api_key):
 
     valid_keys = [
-        "test123"
+        os.getenv("API_KEY")
     ]
 
     return api_key in valid_keys
