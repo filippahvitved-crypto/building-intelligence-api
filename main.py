@@ -605,3 +605,19 @@ def root():
         "product": "Building Intelligence API",
         "version": "1.0"
     }
+
+@app.get("/debug-bbr")
+def debug_bbr(username: str, password: str):
+    response = requests.get(
+        "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/bygning",
+        params={
+            "status": 6,
+            "username": username,
+            "password": password
+        }
+    )
+
+    return {
+        "status_code": response.status_code,
+        "text_start": response.text[:500]
+    }
