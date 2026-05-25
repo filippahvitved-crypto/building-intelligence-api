@@ -541,25 +541,13 @@ def analyze_real_address(
         return {
             "error": "Invalid API key"
         }
-    
+
     print({
-    "event": "api_request",
-    "endpoint": "/analyze-real-address",
-    "address_query": q,
-    "api_key_used": x_api_key[:4] + "..."
+        "event": "api_request",
+        "endpoint": "/analyze-real-address",
+        "address_query": q,
+        "api_key_used": x_api_key[:4] + "..."
     })
-
-    if supabase:
-        supabase.table("api_usage").insert({
-            "endpoint": "/analyze-real-address",
-            "address_query": q,
-            "normalized_address": first_address["adressebetegnelse"],
-            "api_key_prefix": x_api_key[:4],
-            "status": "success",
-            "score": analysis["upgrade_score"]
-        }).execute()
-
-    analysis = calculate_building_analysis(building)
 
     response = requests.get(
         f"https://api.dataforsyningen.dk/adresser?q={q}"
@@ -588,6 +576,16 @@ def analyze_real_address(
 
     analysis = calculate_building_analysis(building)
 
+    if supabase:
+        supabase.table("api_usage").insert({
+            "endpoint": "/analyze-real-address",
+            "address_query": q,
+            "normalized_address": first_address["adressebetegnelse"],
+            "api_key_prefix": x_api_key[:4],
+            "status": "success",
+            "score": analysis["upgrade_score"]
+        }).execute()
+
     return {
         "input": q,
         "normalized_address": first_address["adressebetegnelse"],
@@ -598,24 +596,6 @@ def analyze_real_address(
         "data_status": "Address is real, building data is temporary",
         "analysis": analysis,
         "building_data_used": building,
-    }
-
-@app.post("/test-bbr-building")
-def test_bbr_building(data: BBRInput):
-
-    response = requests.get(
-        "https://services.datafordeler.dk/BBR/BBRPublic/1/REST/bygning",
-        params={
-            "Husnummer": data.adgangsadresseid,
-            "status": 6,
-            "username": data.username,
-            "password": data.password
-        }
-    )
-
-    return {
-        "status_code": response.status_code,
-        "text": response.text
     }
 
 @app.get("/")
