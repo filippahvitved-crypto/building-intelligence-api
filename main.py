@@ -559,6 +559,8 @@ def analyze_real_address(
             "score": analysis["upgrade_score"]
         }).execute()
 
+    analysis = calculate_building_analysis(building)
+
     response = requests.get(
         f"https://api.dataforsyningen.dk/adresser?q={q}"
     )
