@@ -6,6 +6,18 @@ from pydantic import BaseModel
 import requests
 from fastapi import Header
 import os
+from supabase import create_client
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+supabase = None
+
+if SUPABASE_URL and SUPABASE_KEY:
+    supabase = create_client(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    )
 
 #------------------------------
 #2.App
@@ -536,6 +548,13 @@ def analyze_real_address(
     "address_query": q,
     "api_key_used": x_api_key[:4] + "..."
     })
+
+    if supabase:
+        supabase.table("api_usage").insert({
+            "endpoint": "/analyze-real-address",
+            "address_query": q,
+            "api_key_prefix": x_api_key[:4]
+        }).execute()
 
     response = requests.get(
         f"https://api.dataforsyningen.dk/adresser?q={q}"
