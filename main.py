@@ -530,7 +530,12 @@ def analyze_real_address(
             "error": "Invalid API key"
         }
     
-    print(f"API used for address: {q}")
+    print({
+    "event": "api_request",
+    "endpoint": "/analyze-real-address",
+    "address_query": q,
+    "api_key_used": x_api_key[:4] + "..."
+    })
 
     response = requests.get(
         f"https://api.dataforsyningen.dk/adresser?q={q}"
