@@ -329,6 +329,16 @@ def validate_api_key(api_key):
 #6.Helper functions
 #------------------------------
 
+def map_bbr_heating_code(code):
+    heating_map = {
+        "1": "district_heating",
+        "2": "gas",
+        "3": "electric",
+        "5": "heat_pump",
+        "6": "oil"
+    }
+
+    return heating_map.get(str(code), "unknown")
 
 
 #------------------------------
@@ -699,4 +709,64 @@ def bbr_building_year(q: str, username: str, password: str):
         "building_usage_code": first_building.get("byg021BygningensAnvendelse"),
         "heating_installation_code": first_building.get("byg056Varmeinstallation"),
         "building_area": first_building.get("byg038SamletBygningsareal")
+    }
+
+@app.get("/analyze-bbr-address")
+def analyze_bbr_address(q: str, username: str, password: str):
+
+    address_response = requests.get(
+        f"https://api.dataforsyningen.dk/adresser?q={q}"
+    )
+
+    addresses = address_response.json()
+
+    if not addresses:
+        return {
+            "error": "Address not found"
+        }
+
+    first_address = addresses[0]
+    address_id = first_address["adgangsadresse"]["id"]
+
+    bbr_response = requests.get(
+        "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/bygning",
+        params={
+            "Husnummer": address_id,
+            "status": 6,
+            "username": username,
+            "password": password
+        }
+    )
+
+    buildings = bbr_response.json()
+
+    if not buildings:
+        return {
+            "error": "No BBR building found"
+        }
+
+    first_building = buildings[0]
+
+    building = {
+        "energy_label": "E",
+        "building_year": first_building.get("byg026Opførelsesår"),
+        "heating_type": map_bbr_heating_code(
+            first_building.get("byg056Varmeinstallation")
+        ),
+        "energy_consumption_kwh_m2": 180
+    }
+
+    analysis = calculate_building_analysis(building)
+
+    return {
+        "normalized_address": first_address["adressebetegnelse"],
+        "address_id": address_id,
+        "data_status": "Building year and heating type from BBR. Energy label and consumption are temporary.",
+        "bbr_raw_fields": {
+            "building_year": first_building.get("byg026Opførelsesår"),
+            "heating_installation_code": first_building.get("byg056Varmeinstallation"),
+            "building_area": first_building.get("byg038SamletBygningsareal")
+        },
+        "building_data_used": building,
+        "analysis": analysis
     }
