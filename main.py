@@ -637,7 +637,7 @@ def bbr_building_by_address(q: str, username: str, password: str):
         }
 
     first_address = addresses[0]
-    address_id = first_address["id"]
+    address_id = first_address["adgangsadresse"]["id"]
 
     bbr_response = requests.get(
         "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/bygning",
