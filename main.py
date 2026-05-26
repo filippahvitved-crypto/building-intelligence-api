@@ -655,3 +655,48 @@ def bbr_building_by_address(q: str, username: str, password: str):
         "status_code": bbr_response.status_code,
         "bbr_data_start": bbr_response.text[:1000]
     }
+
+@app.get("/bbr-building-year")
+def bbr_building_year(q: str, username: str, password: str):
+
+    address_response = requests.get(
+        f"https://api.dataforsyningen.dk/adresser?q={q}"
+    )
+
+    addresses = address_response.json()
+
+    if not addresses:
+        return {
+            "error": "Address not found"
+        }
+
+    first_address = addresses[0]
+    address_id = first_address["adgangsadresse"]["id"]
+
+    bbr_response = requests.get(
+        "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/bygning",
+        params={
+            "Husnummer": address_id,
+            "status": 6,
+            "username": username,
+            "password": password
+        }
+    )
+
+    buildings = bbr_response.json()
+
+    if not buildings:
+        return {
+            "error": "No BBR building found"
+        }
+
+    first_building = buildings[0]
+
+    return {
+        "normalized_address": first_address["adressebetegnelse"],
+        "address_id": address_id,
+        "building_year": first_building.get("byg026Opførelsesår"),
+        "building_usage_code": first_building.get("byg021BygningensAnvendelse"),
+        "heating_installation_code": first_building.get("byg056Varmeinstallation"),
+        "building_area": first_building.get("byg038SamletBygningsareal")
+    }
