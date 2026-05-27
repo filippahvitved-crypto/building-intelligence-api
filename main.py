@@ -772,6 +772,9 @@ def analyze_bbr_address(q: str, username: str, password: str):
     }
 
 @app.get("/analyze-address")
-def analyze_address(q: str, username: str, password: str):
-    return analyze_bbr_address(q, username, password)
+def analyze_address(q: str):
 
+    username = os.getenv("BBR_USERNAME")
+    password = os.getenv("BBR_PASSWORD")
+
+    return analyze_bbr_address(q, username, password)
