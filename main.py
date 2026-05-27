@@ -770,3 +770,8 @@ def analyze_bbr_address(q: str, username: str, password: str):
         "building_data_used": building,
         "analysis": analysis
     }
+
+@app.get("/analyze-address")
+def analyze_address(q: str, username: str, password: str):
+    return analyze_bbr_address(q, username, password)
+
