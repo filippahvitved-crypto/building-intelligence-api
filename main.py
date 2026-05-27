@@ -777,4 +777,9 @@ def analyze_address(q: str):
     username = os.getenv("BBR_USERNAME")
     password = os.getenv("BBR_PASSWORD")
 
+    if not username or not password:
+        return {
+            "error": "Missing BBR credentials in environment variables"
+        }
+
     return analyze_bbr_address(q, username, password)
