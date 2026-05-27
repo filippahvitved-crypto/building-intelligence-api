@@ -7,6 +7,7 @@ import requests
 from fastapi import Header
 import os
 from supabase import create_client
+from scoring import *
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
