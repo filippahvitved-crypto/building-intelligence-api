@@ -460,18 +460,14 @@ def bbr_building_year(q: str, username: str, password: str):
 @app.get("/analyze-bbr-address")
 def analyze_bbr_address(q: str, username: str, password: str):
 
-    address_response = requests.get(
-        f"https://api.dataforsyningen.dk/adresser?q={q}"
-    )
+    first_address = lookup_address(q)
 
-    addresses = address_response.json()
-
-    if not addresses:
+    if not first_address:
         return {
             "error": "Address not found"
         }
 
-    first_address = addresses[0]
+
     address_id = first_address["adgangsadresse"]["id"]
 
     bbr_response = requests.get(

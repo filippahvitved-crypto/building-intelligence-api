@@ -8,3 +8,25 @@ def map_bbr_heating_code(code):
     }
 
     return heating_map.get(str(code), "unknown")
+
+
+#------------------------------
+#Helper functions
+#------------------------------
+
+import requests
+
+
+def lookup_address(q):
+
+    response = requests.get(
+        f"https://api.dataforsyningen.dk/adresser?q={q}"
+    )
+
+    addresses = response.json()
+
+    if not addresses:
+        return None
+
+    return addresses[0]
+
