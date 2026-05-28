@@ -415,31 +415,20 @@ def bbr_building_by_address(q: str, username: str, password: str):
 @app.get("/bbr-building-year")
 def bbr_building_year(q: str, username: str, password: str):
 
-    address_response = requests.get(
-        f"https://api.dataforsyningen.dk/adresser?q={q}"
-    )
+    first_address = lookup_address(q)
 
-    addresses = address_response.json()
-
-    if not addresses:
+    if not first_address:
         return {
             "error": "Address not found"
         }
 
-    first_address = addresses[0]
-    address_id = first_address["adgangsadresse"]["id"]
+    address_id = get_address_id(first_address)
 
-    bbr_response = requests.get(
-        "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/bygning",
-        params={
-            "Husnummer": address_id,
-            "status": 6,
-            "username": username,
-            "password": password
-        }
+    buildings = get_bbr_buildings(
+        address_id,
+        username,
+        password
     )
-
-    buildings = bbr_response.json()
 
     if not buildings:
         return {
@@ -468,19 +457,9 @@ def analyze_bbr_address(q: str, username: str, password: str):
         }
 
 
-    address_id = first_address["adgangsadresse"]["id"]
+    address_id = get_address_id(first_address)
 
-    bbr_response = requests.get(
-        "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/bygning",
-        params={
-            "Husnummer": address_id,
-            "status": 6,
-            "username": username,
-            "password": password
-        }
-    )
-
-    buildings = bbr_response.json()
+    buildings = get_bbr_buildings(address_id, username, password)
 
     if not buildings:
         return {
@@ -489,14 +468,7 @@ def analyze_bbr_address(q: str, username: str, password: str):
 
     first_building = buildings[0]
 
-    building = {
-        "energy_label": "E",
-        "building_year": first_building.get("byg026Opførelsesår"),
-        "heating_type": map_bbr_heating_code(
-            first_building.get("byg056Varmeinstallation")
-        ),
-        "energy_consumption_kwh_m2": 180
-    }
+    building = build_analysis_input(first_building)
 
     analysis = calculate_building_analysis(building)
 
