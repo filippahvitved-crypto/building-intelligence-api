@@ -9,6 +9,7 @@ import os
 from supabase import create_client
 from scoring import *
 from bbr import *
+from analytics import *
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
@@ -332,15 +333,14 @@ def analyze_real_address(
 
     analysis = calculate_building_analysis(building)
 
-    if supabase:
-        supabase.table("api_usage").insert({
-            "endpoint": "/analyze-real-address",
-            "address_query": q,
-            "normalized_address": first_address["adressebetegnelse"],
-            "api_key_prefix": x_api_key[:4],
-            "status": "success",
-            "score": analysis["upgrade_score"]
-        }).execute()
+    log_api_usage(
+        supabase=supabase,
+        endpoint="/analyze-address",
+        address_query=q,
+        normalized_address=first_address["adressebetegnelse"],
+        api_key_prefix=x_api_key[:4],
+        score=analysis["upgrade_score"]
+    )
 
     return {
         "input": q,
