@@ -1,4 +1,12 @@
-def log_api_usage(supabase, endpoint, address_query, normalized_address, api_key_prefix, score):
+def log_api_usage(
+    supabase,
+    endpoint,
+    address_query,
+    normalized_address,
+    api_key_prefix,
+    analysis,
+    data_status
+):
 
     if supabase:
         supabase.table("api_usage").insert({
@@ -7,5 +15,10 @@ def log_api_usage(supabase, endpoint, address_query, normalized_address, api_key
             "normalized_address": normalized_address,
             "api_key_prefix": api_key_prefix,
             "status": "success",
-            "score": score
+            "score": analysis["upgrade_score"],
+            "priority": analysis["priority"],
+            "esg_risk_score": analysis["esg_risk_score"],
+            "roi_score": analysis["roi_score"],
+            "heat_pump_score": analysis["heat_pump_compatibility_score"],
+            "data_status": data_status
         }).execute()

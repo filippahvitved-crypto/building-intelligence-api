@@ -10,6 +10,7 @@ from supabase import create_client
 from scoring import *
 from bbr import *
 from analytics import *
+from energy import *
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
@@ -334,12 +335,13 @@ def analyze_real_address(
     analysis = calculate_building_analysis(building)
 
     log_api_usage(
-        supabase=supabase,
-        endpoint="/analyze-address",
-        address_query=q,
-        normalized_address=first_address["adressebetegnelse"],
-        api_key_prefix=x_api_key[:4],
-        score=analysis["upgrade_score"]
+    supabase=supabase,
+    endpoint="/analyze-address",
+    address_query=q,
+    normalized_address=first_address["adressebetegnelse"],
+    api_key_prefix=x_api_key[:4],
+    analysis=analysis,
+    data_status="Building year and heating type from BBR. Energy label and consumption are temporary."
     )
 
     return {
@@ -497,3 +499,7 @@ def analyze_address(q: str):
         }
 
     return analyze_bbr_address(q, username, password)
+
+@app.get("/debug-energy-label")
+def debug_energy_label(bbr_number: str):
+    return search_energy_label_bbr(bbr_number)
