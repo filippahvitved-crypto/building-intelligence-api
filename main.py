@@ -1,10 +1,10 @@
 #------------------------------
 #1.Imports
 #------------------------------
-from fastapi import FastAPI
+from fastapi import FastAPI, Header
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 import requests
-from fastapi import Header
 import os
 from supabase import create_client
 from scoring import *
@@ -513,3 +513,55 @@ def analyze_address(q: str):
 @app.get("/debug-energy-label")
 def debug_energy_label(bbr_number: str):
     return search_energy_label_bbr(bbr_number)
+
+
+@app.get("/dashboard", response_class=HTMLResponse)
+def dashboard():
+
+    if not supabase:
+        return "<h1>Supabase not connected</h1>"
+
+    response = supabase.table("api_usage").select("*").order("created_at", desc=True).limit(20).execute()
+
+    rows = response.data
+
+    html = """
+    <html>
+        <head>
+            <title>Building Intelligence Dashboard</title>
+        </head>
+        <body>
+            <h1>Building Intelligence API Dashboard</h1>
+            <h2>Latest API Analyses</h2>
+            <table border="1" cellpadding="8">
+                <tr>
+                    <th>Time</th>
+                    <th>Address</th>
+                    <th>Score</th>
+                    <th>Priority</th>
+                    <th>ESG</th>
+                    <th>ROI</th>
+                    <th>Heat Pump</th>
+                </tr>
+    """
+
+    for row in rows:
+        html += f"""
+                <tr>
+                    <td>{row.get("created_at")}</td>
+                    <td>{row.get("normalized_address")}</td>
+                    <td>{row.get("score")}</td>
+                    <td>{row.get("priority")}</td>
+                    <td>{row.get("esg_risk_score")}</td>
+                    <td>{row.get("roi_score")}</td>
+                    <td>{row.get("heat_pump_score")}</td>
+                </tr>
+        """
+
+    html += """
+            </table>
+        </body>
+    </html>
+    """
+
+    return html
