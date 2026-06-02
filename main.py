@@ -525,13 +525,38 @@ def dashboard():
 
     rows = response.data
 
-    html = """
+    total_analyses = len(rows)
+
+    scores = [row.get("score") for row in rows if row.get("score") is not None]
+
+    if scores:
+        average_score = round(sum(scores) / len(scores), 1)
+    else:
+        average_score = 0
+
+    high_priority_count = len([
+        row for row in rows
+        if row.get("priority") == "High"
+    ])
+
+    latest_address = rows[0].get("normalized_address") if rows else "No analyses yet"
+
+    html = f"""
     <html>
         <head>
             <title>Building Intelligence Dashboard</title>
         </head>
         <body>
             <h1>Building Intelligence API Dashboard</h1>
+
+            <div>
+                <h2>Summary</h2>
+                <p><strong>Total analyses:</strong> {total_analyses}</p>
+                <p><strong>Average score:</strong> {average_score}</p>
+                <p><strong>High priority buildings:</strong> {high_priority_count}</p>
+                <p><strong>Latest address:</strong> {latest_address}</p>
+            </div>
+
             <h2>Latest API Analyses</h2>
             <table border="1" cellpadding="8">
                 <tr>
