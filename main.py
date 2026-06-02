@@ -541,6 +541,12 @@ def dashboard():
 
     latest_address = rows[0].get("normalized_address") if rows else "No analyses yet"
 
+    top_buildings = sorted(
+        rows,
+        key=lambda x: x.get("score") or 0,
+        reverse=True
+    )[:5]
+
     html = f"""
     <html>
         <head>
@@ -556,6 +562,21 @@ def dashboard():
                 <p><strong>High priority buildings:</strong> {high_priority_count}</p>
                 <p><strong>Latest address:</strong> {latest_address}</p>
             </div>
+
+            <h2>Top 5 Highest Scores</h2>
+            <ul>
+    """
+
+    for building in top_buildings:
+        html += f"""
+                <li>
+                    {building.get("normalized_address")}
+                    - Score: {building.get("score")}
+                </li>
+        """
+
+    html += """
+            </ul>
 
             <h2>Latest API Analyses</h2>
             <table border="1" cellpadding="8">
