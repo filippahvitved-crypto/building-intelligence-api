@@ -21,4 +21,7 @@ def log_api_usage(
             "roi_score": analysis["roi_score"],
             "heat_pump_score": analysis["heat_pump_compatibility_score"],
             "data_status": data_status
+            "executive_summary": analysis["executive_summary"],
+            "recommended_strategy": analysis["recommended_strategy"],
+            "risk_flags": analysis["risk_flags"]
         }).execute()
