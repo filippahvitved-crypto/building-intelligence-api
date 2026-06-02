@@ -547,6 +547,11 @@ def dashboard():
         reverse=True
     )[:5]
 
+    high_risk_buildings = [
+        row for row in rows
+        if (row.get("score") or 0) >= 75
+    ]
+
     html = f"""
     <html>
         <head>
@@ -577,6 +582,22 @@ def dashboard():
 
     html += """
             </ul>
+
+            <h2>High Risk Buildings</h2>
+            <ul>
+    """
+
+        for building in high_risk_buildings:
+            html += f"""
+                    <li>
+                        {building.get("normalized_address")}
+                        - Score: {building.get("score")}
+                        - Priority: {building.get("priority")}
+                    </li>
+            """
+
+        html += """
+                </ul>
 
             <h2>Latest API Analyses</h2>
             <table border="1" cellpadding="8">
