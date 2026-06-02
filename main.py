@@ -474,6 +474,16 @@ def analyze_bbr_address(q: str, username: str, password: str):
 
     analysis = calculate_building_analysis(building)
 
+    log_api_usage(
+        supabase=supabase,
+        endpoint="/analyze-address",
+        address_query=q,
+        normalized_address=first_address["adressebetegnelse"],
+        api_key_prefix="bbr",
+        analysis=analysis,
+        data_status="Building year and heating type from BBR. Energy label and consumption are temporary."
+    )
+
     return {
         "normalized_address": first_address["adressebetegnelse"],
         "address_id": address_id,
