@@ -587,17 +587,17 @@ def dashboard():
             <ul>
     """
 
-        for building in high_risk_buildings:
-            html += f"""
-                    <li>
-                        {building.get("normalized_address")}
-                        - Score: {building.get("score")}
-                        - Priority: {building.get("priority")}
-                    </li>
-            """
+    for building in high_risk_buildings:
+        html += f"""
+                <li>
+                    {building.get("normalized_address")}
+                    - Score: {building.get("score")}
+                    - Priority: {building.get("priority")}
+                </li>
+        """
 
-        html += """
-                </ul>
+    html += """
+            </ul>
 
             <h2>Latest API Analyses</h2>
             <table border="1" cellpadding="8">
