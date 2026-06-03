@@ -612,12 +612,24 @@ def dashboard():
     """
 
     for row in rows:
+
+        priority = row.get("priority")
+
+        if priority == "High":
+            priority_color = "red"
+        elif priority == "Medium":
+            priority_color = "orange"
+        else:
+            priority_color = "green"
+
         html += f"""
                 <tr>
                     <td>{row.get("created_at")}</td>
                     <td>{row.get("normalized_address")}</td>
                     <td>{row.get("score")}</td>
-                    <td>{row.get("priority")}</td>
+                    <td style="color: {priority_color}; font-weight: bold;">
+                        {row.get("priority")}
+                    </td>
                     <td>{row.get("esg_risk_score")}</td>
                     <td>{row.get("roi_score")}</td>
                     <td>{row.get("heat_pump_score")}</td>
