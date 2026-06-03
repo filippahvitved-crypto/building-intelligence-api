@@ -526,10 +526,10 @@ def dashboard(search: str = ""):
     rows = response.data
 
     if search:
-    rows = [
-        row for row in rows
-        if search.lower() in (row.get("normalized_address") or "").lower()
-    ]
+        rows = [
+            row for row in rows
+            if search.lower() in (row.get("normalized_address") or "").lower()
+        ]
 
     total_analyses = len(rows)
 
