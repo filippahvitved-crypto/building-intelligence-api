@@ -516,7 +516,7 @@ def debug_energy_label(bbr_number: str):
 
 
 @app.get("/dashboard", response_class=HTMLResponse)
-def dashboard():
+def dashboard(search: str = ""):
 
     if not supabase:
         return "<h1>Supabase not connected</h1>"
@@ -524,6 +524,12 @@ def dashboard():
     response = supabase.table("api_usage").select("*").order("created_at", desc=True).limit(20).execute()
 
     rows = response.data
+
+    if search:
+    rows = [
+        row for row in rows
+        if search.lower() in (row.get("normalized_address") or "").lower()
+    ]
 
     total_analyses = len(rows)
 
@@ -560,6 +566,17 @@ def dashboard():
         <body style="font-family: Arial; padding: 30px; background-color: #f5f5f5;">
 
             <h1>Building Intelligence API Dashboard</h1>
+
+            <form method="get" action="/dashboard" style="margin-bottom: 20px;">
+                <input 
+                    type="text" 
+                    name="search" 
+                    placeholder="Search address..." 
+                    value="{search}"
+                    style="padding: 10px; width: 300px;"
+                >
+                <button type="submit" style="padding: 10px;">Search</button>
+            </form>
 
             <div style="display: flex; gap: 20px; margin-bottom: 30px;">
 
