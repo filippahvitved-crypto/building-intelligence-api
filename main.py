@@ -551,6 +551,16 @@ def dashboard(search: str = "", priority: str = ""):
         if row.get("priority") == "High"
     ])
 
+    medium_priority_count = len([
+        row for row in rows
+        if row.get("priority") == "Medium"
+    ])
+
+    low_priority_count = len([
+        row for row in rows
+        if row.get("priority") == "Low"
+    ])
+
     latest_address = rows[0].get("normalized_address") if rows else "No analyses yet"
 
     top_buildings = sorted(
@@ -619,6 +629,25 @@ def dashboard(search: str = "", priority: str = ""):
                 </div>
 
             </div>
+
+            html += f"""
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+                    <h2>Portfolio Overview</h2>
+
+                    <p>
+                        🔴 High Risk Buildings: <strong>{high_priority_count}</strong>
+                    </p>
+
+                    <p>
+                        🟠 Medium Risk Buildings: <strong>{medium_priority_count}</strong>
+                    </p>
+
+                    <p>
+                        🟢 Low Risk Buildings: <strong>{low_priority_count}</strong>
+                    </p>
+
+                </div>
+            """
 
             <h2>Top 5 Highest Scores</h2>
             <ul>
