@@ -557,15 +557,32 @@ def dashboard():
         <head>
             <title>Building Intelligence Dashboard</title>
         </head>
-        <body>
+        <body style="font-family: Arial; padding: 30px; background-color: #f5f5f5;">
+
             <h1>Building Intelligence API Dashboard</h1>
 
-            <div>
-                <h2>Summary</h2>
-                <p><strong>Total analyses:</strong> {total_analyses}</p>
-                <p><strong>Average score:</strong> {average_score}</p>
-                <p><strong>High priority buildings:</strong> {high_priority_count}</p>
-                <p><strong>Latest address:</strong> {latest_address}</p>
+            <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+
+                <div style="background: white; padding: 20px; border-radius: 10px; width: 220px;">
+                    <h3>Total Analyses</h3>
+                    <p style="font-size: 28px; font-weight: bold;">{total_analyses}</p>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; width: 220px;">
+                    <h3>Average Score</h3>
+                    <p style="font-size: 28px; font-weight: bold;">{average_score}</p>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; width: 220px;">
+                    <h3>High Priority</h3>
+                    <p style="font-size: 28px; font-weight: bold;">{high_priority_count}</p>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; width: 300px;">
+                    <h3>Latest Address</h3>
+                    <p>{latest_address}</p>
+                </div>
+
             </div>
 
             <h2>Top 5 Highest Scores</h2>
