@@ -597,8 +597,6 @@ def dashboard():
         """
 
     html += """
-            </ul>
-
             <h2>Latest API Analyses</h2>
             <table border="1" cellpadding="8">
                 <tr>
@@ -609,6 +607,7 @@ def dashboard():
                     <th>ESG</th>
                     <th>ROI</th>
                     <th>Heat Pump</th>
+                    <th>Summary</th>
                 </tr>
     """
 
@@ -622,6 +621,7 @@ def dashboard():
                     <td>{row.get("esg_risk_score")}</td>
                     <td>{row.get("roi_score")}</td>
                     <td>{row.get("heat_pump_score")}</td>
+                    <td>{row.get("executive_summary")}</td>
                 </tr>
         """
 
