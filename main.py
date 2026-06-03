@@ -532,10 +532,10 @@ def dashboard(search: str = "", priority: str = ""):
         ]
 
     if priority:
-    rows = [
-        row for row in rows
-        if row.get("priority") == priority
-    ]
+        rows = [
+            row for row in rows
+            if row.get("priority") == priority
+        ]
 
     total_analyses = len(rows)
 
