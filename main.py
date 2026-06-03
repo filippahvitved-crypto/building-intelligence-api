@@ -598,20 +598,29 @@ def dashboard():
         """
 
     html += """
-            </ul>
-
             <h2>High Risk Buildings</h2>
-            <ul>
+            <table border="1" cellpadding="8" style="background: white; border-collapse: collapse; margin-bottom: 30px;">
+                <tr>
+                    <th>Address</th>
+                    <th>Score</th>
+                    <th>Priority</th>
+                    <th>Recommended Strategy</th>
+                </tr>
     """
 
     for building in high_risk_buildings:
         html += f"""
-                <li>
-                    {building.get("normalized_address")}
-                    - Score: {building.get("score")}
-                    - Priority: {building.get("priority")}
-                </li>
+                <tr>
+                    <td>{building.get("normalized_address")}</td>
+                    <td>{building.get("score")}</td>
+                    <td style="color: red; font-weight: bold;">{building.get("priority")}</td>
+                    <td>{building.get("recommended_strategy")}</td>
+                </tr>
         """
+
+    html += """
+            </table>
+    """
 
     html += """
             <h2>Latest API Analyses</h2>
