@@ -630,24 +630,24 @@ def dashboard(search: str = "", priority: str = ""):
 
             </div>
 
-            html += f"""
-                <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
-                    <h2>Portfolio Overview</h2>
+            <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+                <h2>Portfolio Overview</h2>
 
-                    <p>
-                        🔴 High Risk Buildings: <strong>{high_priority_count}</strong>
-                    </p>
+                <p>
+                    🔴 High Risk Buildings: <strong>{high_priority_count}</strong>
+                </p>
 
-                    <p>
-                        🟠 Medium Risk Buildings: <strong>{medium_priority_count}</strong>
-                    </p>
+                <p>
+                    🟠 Medium Risk Buildings: <strong>{medium_priority_count}</strong>
+                </p>
 
-                    <p>
-                        🟢 Low Risk Buildings: <strong>{low_priority_count}</strong>
-                    </p>
+                <p>
+                    🟢 Low Risk Buildings: <strong>{low_priority_count}</strong>
+                </p>
+            </div>
 
-                </div>
-            """
+            <h2>Top 5 Highest Scores</h2>
+            <ul>
 
             <h2>Top 5 Highest Scores</h2>
             <ul>
