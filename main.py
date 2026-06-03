@@ -740,3 +740,56 @@ def dashboard(search: str = "", priority: str = ""):
     """
 
     return html
+
+
+@app.get("/building-details", response_class=HTMLResponse)
+def building_details(address: str):
+
+    response = (
+        supabase
+        .table("api_usage")
+        .select("*")
+        .eq("normalized_address", address)
+        .order("created_at", desc=True)
+        .limit(1)
+        .execute()
+    )
+
+    rows = response.data
+
+    if not rows:
+        return "<h1>Building not found</h1>"
+
+    building = rows[0]
+
+    return f"""
+    <html>
+        <body style="font-family: Arial; padding: 30px;">
+            <h1>{building.get("normalized_address")}</h1>
+
+            <h2>Analysis Overview</h2>
+
+            <p><strong>Upgrade Score:</strong> {building.get("score")}</p>
+            <p><strong>Priority:</strong> {building.get("priority")}</p>
+            <p><strong>ESG Risk Score:</strong> {building.get("esg_risk_score")}</p>
+            <p><strong>ROI Score:</strong> {building.get("roi_score")}</p>
+            <p><strong>Heat Pump Score:</strong> {building.get("heat_pump_score")}</p>
+
+            <h2>Executive Summary</h2>
+
+            <p>{building.get("executive_summary")}</p>
+
+            <h2>Recommended Strategy</h2>
+
+            <p>{building.get("recommended_strategy")}</p>
+
+            <h2>Risk Flags</h2>
+
+            <p>{building.get("risk_flags")}</p>
+
+            <br>
+            <a href="/dashboard">← Back to Dashboard</a>
+
+        </body>
+    </html>
+    """
