@@ -656,9 +656,7 @@ def dashboard(search: str = "", priority: str = ""):
     for building in top_buildings:
         html += f"""
                 <li>
-                    <a href="/building-details?address={building.get('normalized_address')}">
-                        {building.get("normalized_address")}
-                    </a>
+                    {building.get("normalized_address")}
                     - Score: {building.get("score")}
                 </li>
         """
@@ -675,9 +673,15 @@ def dashboard(search: str = "", priority: str = ""):
     """
 
     for building in high_risk_buildings:
+        address = building.get("normalized_address")
+
         html += f"""
                 <tr>
-                    <td>{building.get("normalized_address")}</td>
+                    <td>
+                        <a href="/building-details?address={address}">
+                            {address}
+                        </a>
+                    </td>
                     <td>{building.get("score")}</td>
                     <td style="color: red; font-weight: bold;">{building.get("priority")}</td>
                     <td>{building.get("recommended_strategy")}</td>
@@ -736,6 +740,3 @@ def dashboard(search: str = "", priority: str = ""):
     """
 
     return html
-
-@app.get("/building-details")
-def building_details(address: str):
