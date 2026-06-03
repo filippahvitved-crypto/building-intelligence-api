@@ -656,7 +656,9 @@ def dashboard(search: str = "", priority: str = ""):
     for building in top_buildings:
         html += f"""
                 <li>
-                    {building.get("normalized_address")}
+                    <a href="/building-details?address={building.get('normalized_address')}">
+                        {building.get("normalized_address")}
+                    </a>
                     - Score: {building.get("score")}
                 </li>
         """
@@ -734,3 +736,6 @@ def dashboard(search: str = "", priority: str = ""):
     """
 
     return html
+
+@app.get("/building-details")
+def building_details(address: str):
