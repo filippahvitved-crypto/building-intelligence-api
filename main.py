@@ -571,7 +571,7 @@ def dashboard(search: str = "", priority: str = ""):
 
     high_risk_buildings = [
         row for row in rows
-        if (row.get("score") or 0) >= 75
+        if (row.get("score") or 0) >= 60
     ]
 
     html = f"""
