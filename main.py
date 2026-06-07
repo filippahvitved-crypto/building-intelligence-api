@@ -828,3 +828,28 @@ def analyze_portfolio(data: PortfolioInput):
         "total_addresses": len(data.addresses),
         "results": results
     }
+
+@app.get("/debug-address-bbr")
+def debug_address_bbr(q: str):
+
+    first_address = lookup_address(q)
+
+    if not first_address:
+        return {
+            "error": "Address not found in DAWA"
+        }
+
+    address_id = get_address_id(first_address)
+
+    username = os.getenv("BBR_USERNAME")
+    password = os.getenv("BBR_PASSWORD")
+
+    buildings = get_bbr_buildings(address_id, username, password)
+
+    return {
+        "input": q,
+        "normalized_address": first_address["adressebetegnelse"],
+        "address_id": address_id,
+        "bbr_buildings_found": len(buildings),
+        "bbr_data": buildings
+    }
