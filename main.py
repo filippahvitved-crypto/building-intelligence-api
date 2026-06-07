@@ -404,7 +404,6 @@ def bbr_building_by_address(q: str, username: str, password: str):
         "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/bygning",
         params={
             "Husnummer": address_id,
-            "status": 6,
             "username": username,
             "password": password
         }
