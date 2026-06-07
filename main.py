@@ -47,6 +47,9 @@ class BBRInput(BaseModel):
     username: str
     password: str
 
+class PortfolioInput(BaseModel):
+    addresses: list[str]
+
 #------------------------------
 #4.Fake database
 #------------------------------
@@ -793,3 +796,35 @@ def building_details(address: str):
         </body>
     </html>
     """
+
+@app.post("/analyze-portfolio")
+def analyze_portfolio(data: PortfolioInput):
+
+    username = os.getenv("BBR_USERNAME")
+    password = os.getenv("BBR_PASSWORD")
+
+    results = []
+
+    for address in data.addresses:
+
+        try:
+
+            result = analyze_bbr_address(
+                address,
+                username,
+                password
+            )
+
+            results.append(result)
+
+        except Exception as e:
+
+            results.append({
+                "address": address,
+                "error": str(e)
+            })
+
+    return {
+        "total_addresses": len(data.addresses),
+        "results": results
+    }
