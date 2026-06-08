@@ -467,6 +467,10 @@ def analyze_bbr_address(q: str, username: str, password: str):
 
     if not buildings:
         return {
+            "input": q,
+            "normalized_address": first_address["adressebetegnelse"],
+            "address_id": address_id,
+            "data_status": "Address found in DAWA, but no BBR building found for this access address",
             "error": "No BBR building found"
         }
 
@@ -823,9 +827,45 @@ def analyze_portfolio(data: PortfolioInput):
                 "error": str(e)
             })
 
+    successful_results = [
+        result for result in results
+        if "analysis" in result
+    ]
+
+    failed_results = [
+        result for result in results
+        if "analysis" not in result
+    ]
+
+    successful_results = sorted(
+        successful_results,
+        key=lambda x: x["analysis"]["upgrade_score"],
+        reverse=True
+    )
+
+    if successful_results:
+        average_score = round(
+            sum(result["analysis"]["upgrade_score"] for result in successful_results)
+            / len(successful_results),
+            1
+        )
+    else:
+        average_score = 0
+
+    high_priority_count = len([
+        result for result in successful_results
+        if result["analysis"]["priority"] == "High"
+    ])
+
     return {
         "total_addresses": len(data.addresses),
-        "results": results
+        "successful_analyses": len(successful_results),
+        "failed_analyses": len(failed_results),
+        "portfolio_summary": {
+            "average_upgrade_score": average_score,
+            "high_priority_count": high_priority_count
+        },
+        "results": successful_results + failed_results
     }
 
 @app.get("/debug-address-bbr")
