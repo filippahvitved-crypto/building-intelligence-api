@@ -904,8 +904,8 @@ def debug_address_bbr(q: str):
 @app.get("/debug-emo")
 def debug_emo():
 
-    username = os.getenv("filippa.hvitved@gmail.com")
-    password = os.getenv("12345678")
+    username = os.getenv("EMO_USERNAME")
+    password = os.getenv("EMO_PASSWORD")
 
     if not username or not password:
         return {
