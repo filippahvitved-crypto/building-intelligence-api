@@ -4,7 +4,7 @@ from requests.auth import HTTPBasicAuth
 
 def test_emo_connection(username, password):
     response = requests.get(
-        "https://emoweb.dk/EMOData/emodata.svc/SearchEnergyLabelBBR",
+        "https://emoweb.dk/emodata/test/",
         auth=HTTPBasicAuth(username, password)
     )
 
