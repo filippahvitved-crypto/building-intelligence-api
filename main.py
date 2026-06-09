@@ -909,7 +909,9 @@ def debug_emo():
 
     if not username or not password:
         return {
-            "error": "Missing EMO credentials"
+            "error": "Missing EMO credentials",
+            "has_username": bool(username),
+            "has_password": bool(password)
         }
 
     return test_emo_connection(username, password)
