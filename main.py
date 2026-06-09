@@ -857,13 +857,21 @@ def analyze_portfolio(data: PortfolioInput):
         if result["analysis"]["priority"] == "High"
     ])
 
+    if average_score >= 75:
+        portfolio_recommendation = "This portfolio has high renovation priority and should be reviewed for immediate upgrade opportunities."
+    elif average_score >= 45:
+        portfolio_recommendation = "This portfolio has medium renovation potential. Several buildings may be relevant for energy upgrades or investment review."
+    else:
+        portfolio_recommendation = "This portfolio has low renovation priority based on the available data."
+
     return {
         "total_addresses": len(data.addresses),
         "successful_analyses": len(successful_results),
         "failed_analyses": len(failed_results),
         "portfolio_summary": {
             "average_upgrade_score": average_score,
-            "high_priority_count": high_priority_count
+            "high_priority_count": high_priority_count,
+            "portfolio_recommendation": portfolio_recommendation
         },
         "results": successful_results + failed_results
     }
