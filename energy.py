@@ -1,12 +1,11 @@
 import requests
+from requests.auth import HTTPBasicAuth
 
 
-def search_energy_label_bbr(bbr_number):
+def test_emo_connection(username, password):
     response = requests.get(
         "https://emoweb.dk/EMOData/emodata.svc/SearchEnergyLabelBBR",
-        params={
-            "bbr": bbr_number
-        }
+        auth=HTTPBasicAuth(username, password)
     )
 
     return {

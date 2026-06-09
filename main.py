@@ -900,3 +900,16 @@ def debug_address_bbr(q: str):
         "bbr_buildings_found": len(buildings),
         "bbr_data": buildings
     }
+
+@app.get("/debug-emo")
+def debug_emo():
+
+    username = os.getenv("EMO_USERNAME")
+    password = os.getenv("EMO_PASSWORD")
+
+    if not username or not password:
+        return {
+            "error": "Missing EMO credentials"
+        }
+
+    return test_emo_connection(username, password)
