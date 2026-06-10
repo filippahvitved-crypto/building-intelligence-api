@@ -947,3 +947,23 @@ def debug_energy_label_manual(
         property_number,
         building
     )
+
+@app.get("/debug-bbr-grund")
+def debug_bbr_grund(grund_id: str):
+
+    username = os.getenv("BBR_USERNAME")
+    password = os.getenv("BBR_PASSWORD")
+
+    response = requests.get(
+        "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/grund",
+        params={
+            "id": grund_id,
+            "username": username,
+            "password": password
+        }
+    )
+
+    return {
+        "status_code": response.status_code,
+        "text_start": response.text[:1500]
+    }
