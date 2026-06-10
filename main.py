@@ -898,7 +898,7 @@ def debug_address_bbr(q: str):
         "normalized_address": first_address["adressebetegnelse"],
         "address_id": address_id,
         "bbr_buildings_found": len(buildings),
-        "bbr_data": buildings
+
         "possible_emo_fields": {
             "municipality": buildings[0].get("kommunekode") if buildings else None,
             "building": buildings[0].get("byg007Bygningsnummer") if buildings else None,
@@ -906,7 +906,9 @@ def debug_address_bbr(q: str):
             "grund": buildings[0].get("grund") if buildings else None,
             "bfe": buildings[0].get("bfeNummer") if buildings else None,
             "ejendomsnummer": buildings[0].get("ejendomsnummer") if buildings else None
-        }
+        },
+
+        "bbr_data": buildings
     }
 
 @app.get("/debug-emo-bbr")
