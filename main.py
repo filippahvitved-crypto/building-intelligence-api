@@ -328,6 +328,12 @@ def analyze_real_address(
 
     location_risk_score = score_location_risk(x, y)
 
+    building_year = first_building.get("byg026Opførelsesår")
+
+    heating_type = map_bbr_heating_code(
+        first_building.get("byg056Varmeinstallation")
+    )
+
     if energy_label_data:
         energy_label = energy_label_data.get(
             "EnergyLabelClassification",
