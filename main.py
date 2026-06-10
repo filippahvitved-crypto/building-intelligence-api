@@ -901,17 +901,21 @@ def debug_address_bbr(q: str):
         "bbr_data": buildings
     }
 
-@app.get("/debug-emo")
-def debug_emo():
+@app.get("/debug-emo-bbr")
+def debug_emo_bbr(municipality: str, property_number: str, building: str):
 
     username = os.getenv("EMO_USERNAME")
     password = os.getenv("EMO_PASSWORD")
 
     if not username or not password:
         return {
-            "error": "Missing EMO credentials",
-            "has_username": bool(username),
-            "has_password": bool(password)
+            "error": "Missing EMO credentials"
         }
 
-    return test_emo_connection(username, password)
+    return search_energy_label_bbr(
+        username,
+        password,
+        municipality,
+        property_number,
+        building
+    )

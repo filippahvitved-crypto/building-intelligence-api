@@ -2,13 +2,18 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 
-def test_emo_connection(username, password):
+def search_energy_label_bbr(username, password, municipality, property_number, building):
+    url = (
+        "https://emoweb.dk/emodata/emodata.svc/"
+        f"SearchEnergyLabelBBR/{municipality}/{property_number}/{building}"
+    )
+
     response = requests.get(
-        "https://emoweb.dk/emodata/test/",
+        url,
         auth=HTTPBasicAuth(username, password)
     )
 
     return {
         "status_code": response.status_code,
-        "text_start": response.text[:500]
+        "data": response.json()
     }
