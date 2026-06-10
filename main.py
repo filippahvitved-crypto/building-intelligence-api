@@ -899,6 +899,14 @@ def debug_address_bbr(q: str):
         "address_id": address_id,
         "bbr_buildings_found": len(buildings),
         "bbr_data": buildings
+        "possible_emo_fields": {
+            "municipality": buildings[0].get("kommunekode") if buildings else None,
+            "building": buildings[0].get("byg007Bygningsnummer") if buildings else None,
+            "jordstykke": buildings[0].get("jordstykke") if buildings else None,
+            "grund": buildings[0].get("grund") if buildings else None,
+            "bfe": buildings[0].get("bfeNummer") if buildings else None,
+            "ejendomsnummer": buildings[0].get("ejendomsnummer") if buildings else None
+        }
     }
 
 @app.get("/debug-emo-bbr")
@@ -911,6 +919,24 @@ def debug_emo_bbr(municipality: str, property_number: str, building: str):
         return {
             "error": "Missing EMO credentials"
         }
+
+    return search_energy_label_bbr(
+        username,
+        password,
+        municipality,
+        property_number,
+        building
+    )
+
+@app.get("/debug-energy-label-manual")
+def debug_energy_label_manual(
+    municipality: str,
+    property_number: str,
+    building: str
+):
+
+    username = os.getenv("EMO_USERNAME")
+    password = os.getenv("EMO_PASSWORD")
 
     return search_energy_label_bbr(
         username,
