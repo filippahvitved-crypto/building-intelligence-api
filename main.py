@@ -328,10 +328,18 @@ def analyze_real_address(
 
     location_risk_score = score_location_risk(x, y)
 
+    if energy_label_data:
+        energy_label = energy_label_data.get(
+            "EnergyLabelClassification",
+            "E"
+        )
+    else:
+        energy_label = "E"
+
     building = {
-        "energy_label": "E",
-        "building_year": 1970,
-        "heating_type": "gas",
+        "energy_label": energy_label,
+        "building_year": building_year,
+        "heating_type": heating_type,
         "energy_consumption_kwh_m2": 180
     }
 
@@ -475,6 +483,32 @@ def analyze_bbr_address(q: str, username: str, password: str):
         }
 
     first_building = buildings[0]
+
+    grund_id = first_building.get("grund")
+
+    property_number = get_property_number_from_grund(
+        grund_id,
+        username,
+        password
+    )
+
+    municipality = first_building.get("kommunekode")
+    building_number = first_building.get("byg007Bygningsnummer")
+
+    emo_username = os.getenv("EMO_USERNAME")
+    emo_password = os.getenv("EMO_PASSWORD")
+
+    energy_search = search_energy_label_bbr(
+        emo_username,
+        emo_password,
+        str(int(municipality)),
+        str(property_number),
+        str(building_number)
+    )
+
+    energy_label_data = get_latest_energy_label(
+        energy_search
+    )
 
     building = build_analysis_input(first_building)
 
