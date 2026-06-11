@@ -518,6 +518,14 @@ def analyze_bbr_address(q: str, username: str, password: str):
 
     building = build_analysis_input(first_building)
 
+    if energy_label_data:
+        building["energy_label"] = energy_label_data.get(
+            "EnergyLabelClassification",
+            "E"
+        )
+    else:
+        building["energy_label"] = "E"
+
     analysis = calculate_building_analysis(building)
 
     log_api_usage(
@@ -527,13 +535,13 @@ def analyze_bbr_address(q: str, username: str, password: str):
         normalized_address=first_address["adressebetegnelse"],
         api_key_prefix="bbr",
         analysis=analysis,
-        data_status="Building year and heating type from BBR. Energy label and consumption are temporary."
+        data_status="Building year and heating type from BBR. Energy label from EMO. Energy consumption is temporary."
     )
 
     return {
         "normalized_address": first_address["adressebetegnelse"],
         "address_id": address_id,
-        "data_status": "Building year and heating type from BBR. Energy label and consumption are temporary.",
+        "data_status":"Building year and heating type from BBR. Energy label from EMO. Energy consumption is temporary.",
         "bbr_raw_fields": {
             "building_year": first_building.get("byg026Opførelsesår"),
             "heating_installation_code": first_building.get("byg056Varmeinstallation"),
