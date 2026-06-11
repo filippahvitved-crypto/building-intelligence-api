@@ -153,6 +153,9 @@ def calculate_building_analysis(building):
     if roi_score >= 75:
         recommended_strategy.append("Prioritize renovation for investment upside")
 
+    if not recommended_strategy:
+        recommended_strategy.append("No immediate action recommended based on current data")
+
     executive_summary = f"""
     This building has an upgrade score of {final_score} and an ESG risk level of {esg_risk_level}.
 
