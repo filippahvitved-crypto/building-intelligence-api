@@ -467,16 +467,23 @@ def bbr_building_year(q: str, username: str, password: str):
 @app.get("/analyze-bbr-address")
 def analyze_bbr_address(q: str):
 
-    first_address = lookup_address(q)
-
     username = os.getenv("BBR_USERNAME")
     password = os.getenv("BBR_PASSWORD")
+
+    if not username or not password:
+        return {
+            "error": "Missing BBR credentials"
+        }
+
+    emo_username = os.getenv("EMO_USERNAME")
+    emo_password = os.getenv("EMO_PASSWORD")
+
+    first_address = lookup_address(q)
 
     if not first_address:
         return {
             "error": "Address not found"
         }
-
 
     address_id = get_address_id(first_address)
 
@@ -493,41 +500,42 @@ def analyze_bbr_address(q: str):
 
     first_building = buildings[0]
 
-    grund_id = first_building.get("grund")
-
-    property_number = get_property_number_from_grund(
-        grund_id,
-        username,
-        password
-    )
-
-    municipality = first_building.get("kommunekode")
-    building_number = first_building.get("byg007Bygningsnummer")
-
-    emo_username = os.getenv("EMO_USERNAME")
-    emo_password = os.getenv("EMO_PASSWORD")
-
-    energy_search = search_energy_label_bbr(
-        emo_username,
-        emo_password,
-        str(int(municipality)),
-        str(property_number),
-        str(building_number)
-    )
-
-    energy_label_data = get_latest_energy_label(
-        energy_search
-    )
-
     building = build_analysis_input(first_building)
+
+    energy_label_data = None
+
+    if emo_username and emo_password:
+        grund_id = first_building.get("grund")
+
+        property_number = get_property_number_from_grund(
+            grund_id,
+            username,
+            password
+        )
+
+        municipality = first_building.get("kommunekode")
+        building_number = first_building.get("byg007Bygningsnummer")
+
+        if property_number and municipality and building_number:
+            energy_search = search_energy_label_bbr(
+                emo_username,
+                emo_password,
+                str(int(municipality)),
+                str(property_number),
+                str(building_number)
+            )
+
+            energy_label_data = get_latest_energy_label(energy_search)
 
     if energy_label_data:
         building["energy_label"] = energy_label_data.get(
             "EnergyLabelClassification",
             "E"
         )
+        data_status = "Building year and heating type from BBR. Energy label from EMO. Energy consumption is temporary."
     else:
         building["energy_label"] = "E"
+        data_status = "Building year and heating type from BBR. Energy label and consumption are temporary."
 
     analysis = calculate_building_analysis(building)
 
@@ -538,21 +546,29 @@ def analyze_bbr_address(q: str):
         normalized_address=first_address["adressebetegnelse"],
         api_key_prefix="bbr",
         analysis=analysis,
-        data_status="Building year and heating type from BBR. Energy label from EMO. Energy consumption is temporary."
+        data_status=data_status
     )
 
     return {
         "normalized_address": first_address["adressebetegnelse"],
         "address_id": address_id,
-        "data_status":"Building year and heating type from BBR. Energy label from EMO. Energy consumption is temporary.",
+        "data_status": data_status,
         "bbr_raw_fields": {
             "building_year": first_building.get("byg026Opførelsesår"),
             "heating_installation_code": first_building.get("byg056Varmeinstallation"),
-            "building_area": first_building.get("byg038SamletBygningsareal")
+            "building_area": first_building.get("byg038SamletBygningsareal"),
+            "kommunekode": first_building.get("kommunekode"),
+            "building_number": first_building.get("byg007Bygningsnummer"),
+            "grund": first_building.get("grund")
         },
+        "energy_label_data": energy_label_data,
         "building_data_used": building,
         "analysis": analysis
     }
+
+@app.get("/analyze-address")
+def analyze_address(q: str):
+    return analyze_bbr_address(q)
 
 @app.get("/analyze-address")
 def analyze_address(q: str):
