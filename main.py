@@ -570,23 +570,9 @@ def analyze_bbr_address(q: str):
 def analyze_address(q: str):
     return analyze_bbr_address(q)
 
-@app.get("/analyze-address")
-def analyze_address(q: str):
-
-    username = os.getenv("BBR_USERNAME")
-    password = os.getenv("BBR_PASSWORD")
-
-    if not username or not password:
-        return {
-            "error": "Missing BBR credentials in environment variables"
-        }
-
-    return analyze_bbr_address(q, username, password)
-
 @app.get("/debug-energy-label")
 def debug_energy_label(bbr_number: str):
     return search_energy_label_bbr(bbr_number)
-
 
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard(search: str = "", priority: str = ""):
