@@ -465,9 +465,12 @@ def bbr_building_year(q: str, username: str, password: str):
     }
 
 @app.get("/analyze-bbr-address")
-def analyze_bbr_address(q: str, username: str, password: str):
+def analyze_bbr_address(q: str):
 
     first_address = lookup_address(q)
+
+    username = os.getenv("BBR_USERNAME")
+    password = os.getenv("BBR_PASSWORD")
 
     if not first_address:
         return {
