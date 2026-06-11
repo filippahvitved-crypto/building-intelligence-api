@@ -1,3 +1,5 @@
+import requests
+
 def map_bbr_heating_code(code):
     heating_map = {
         "1": "district_heating",
@@ -8,14 +10,6 @@ def map_bbr_heating_code(code):
     }
 
     return heating_map.get(str(code), "unknown")
-
-
-#------------------------------
-#Helper functions
-#------------------------------
-
-import requests
-
 
 def lookup_address(q):
 
@@ -59,3 +53,28 @@ def build_analysis_input(first_building):
         ),
         "energy_consumption_kwh_m2": 180
     }
+
+def get_property_number_from_grund(grund_id, username, password):
+
+    response = requests.get(
+        "https://services.datafordeler.dk/BBR/BBRPublic/1/rest/grund",
+        params={
+            "id": grund_id,
+            "username": username,
+            "password": password
+        }
+    )
+
+    data = response.json()
+
+    if not data:
+        return None
+
+    grund = data[0]
+
+    bestemt_fast_ejendom = grund.get("bestemtFastEjendom")
+
+    if not bestemt_fast_ejendom:
+        return None
+
+    return bestemt_fast_ejendom.get("ejendomsnummer")
