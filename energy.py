@@ -39,3 +39,20 @@ def get_latest_energy_label(search_result):
         return valid_labels[0]
 
     return results[0]
+
+def get_energy_label_details(username, password, label_id):
+
+    url = (
+        "https://emoweb.dk/emodata/emodata.svc/"
+        f"GetEnergyLabel/{label_id}"
+    )
+
+    response = requests.get(
+        url,
+        auth=HTTPBasicAuth(username, password)
+    )
+
+    return {
+        "status_code": response.status_code,
+        "text_start": response.text[:2000]
+    }
