@@ -40,11 +40,15 @@ def get_latest_energy_label(search_result):
 
     return results[0]
 
-def get_energy_label_details(username, password, label_id):
+def get_energy_label_details(
+    username,
+    password,
+    entity_identifier
+):
 
     url = (
-        "https://emoweb.dk/emodata/emodata.svc/"
-        f"GetEnergyLabel/{label_id}"
+        "https://emoweb.dk/emodata/EMOData.svc/"
+        f"FetchEnergyLabelDetails/{entity_identifier}"
     )
 
     response = requests.get(
@@ -54,5 +58,5 @@ def get_energy_label_details(username, password, label_id):
 
     return {
         "status_code": response.status_code,
-        "text_start": response.text[:2000]
+        "data": response.json()
     }
