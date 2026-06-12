@@ -1022,18 +1022,13 @@ def debug_bbr_grund(grund_id: str):
     }
 
 @app.get("/debug-energy-details")
-def debug_energy_details(label_id: str):
+def debug_energy_details(entity_identifier: str):
 
     username = os.getenv("EMO_USERNAME")
     password = os.getenv("EMO_PASSWORD")
 
-    if not username or not password:
-        return {
-            "error": "Missing EMO credentials"
-        }
-
     return get_energy_label_details(
         username,
         password,
-        label_id
+        entity_identifier
     )
