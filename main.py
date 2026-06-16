@@ -886,11 +886,7 @@ def analyze_portfolio(data: PortfolioInput):
 
         try:
 
-            result = analyze_bbr_address(
-                address,
-                username,
-                password
-            )
+            result = analyze_bbr_address(address)
 
             results.append(result)
 
