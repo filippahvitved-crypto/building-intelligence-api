@@ -24,4 +24,6 @@ def log_api_usage(
             "executive_summary": analysis["executive_summary"],
             "recommended_strategy": analysis["recommended_strategy"],
             "risk_flags": analysis["risk_flags"]
+            "energy_label": analysis.get("energy_label"),
+            "energy_consumption_kwh_m2": analysis.get("energy_consumption_kwh_m2"),
         }).execute()

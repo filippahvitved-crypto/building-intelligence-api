@@ -791,6 +791,8 @@ def dashboard(search: str = "", priority: str = ""):
                     <th>ESG</th>
                     <th>ROI</th>
                     <th>Heat Pump</th>
+                    <th>Energy Label</th>
+                    <th>Energy Consumption</th>
                     <th>Summary</th>
                 </tr>
     """
@@ -817,6 +819,8 @@ def dashboard(search: str = "", priority: str = ""):
                     <td>{row.get("esg_risk_score")}</td>
                     <td>{row.get("roi_score")}</td>
                     <td>{row.get("heat_pump_score")}</td>
+                    <td>{row.get("energy_label")}</td>
+                    <td>{row.get("energy_consumption_kwh_m2")}</td>
                     <td>{row.get("executive_summary")}</td>
                 </tr>
         """
