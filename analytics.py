@@ -5,7 +5,8 @@ def log_api_usage(
     normalized_address,
     api_key_prefix,
     analysis,
-    data_status
+    data_status,
+    building
 ):
 
     if supabase:

@@ -574,7 +574,8 @@ def analyze_bbr_address(q: str):
         normalized_address=first_address["adressebetegnelse"],
         api_key_prefix="bbr",
         analysis=analysis,
-        data_status=data_status
+        data_status=data_status,
+        building=building
     )
 
     return {
