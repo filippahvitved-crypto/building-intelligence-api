@@ -505,6 +505,7 @@ def analyze_bbr_address(q: str):
     energy_label_data = None
     energy_details = None
     energy_consumption_kwh_m2 = 180
+    energy_proposals = []
 
     if emo_username and emo_password:
         grund_id = first_building.get("grund")
@@ -546,6 +547,10 @@ def analyze_bbr_address(q: str):
                 if calculated_consumption:
                     energy_consumption_kwh_m2 = calculated_consumption
 
+                energy_proposals = get_recommended_energy_proposals(
+                    energy_details["data"]
+                )
+
     if energy_label_data:
         building["energy_label"] = energy_label_data.get(
             "EnergyLabelClassification",
@@ -583,6 +588,7 @@ def analyze_bbr_address(q: str):
             "grund": first_building.get("grund")
         },
         "energy_label_data": energy_label_data,
+        "energy_proposals": energy_proposals,
         "building_data_used": building,
         "analysis": analysis
     }

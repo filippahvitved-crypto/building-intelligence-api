@@ -80,3 +80,22 @@ def get_energy_consumption_per_m2(
 
     except Exception:
         return None
+
+def get_recommended_energy_proposals(energy_details):
+
+    try:
+        proposals = energy_details["ProposalOverview"]["RecommendedProposals"]
+
+        return [
+            {
+                "title": proposal.get("Shorttext"),
+                "investment": proposal.get("Investment"),
+                "money_saving": proposal.get("MoneySaving"),
+                "renovation_time": proposal.get("RenovationTime"),
+                "category": proposal.get("Category")
+            }
+            for proposal in proposals
+        ]
+
+    except Exception:
+        return []
