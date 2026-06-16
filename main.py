@@ -500,14 +500,14 @@ def analyze_bbr_address(q: str):
 
     first_building = buildings[0]
 
-    building = build_analysis_input(first_building)
-
-    building["energy_proposals"] = energy_proposals
-
     energy_label_data = None
     energy_details = None
     energy_consumption_kwh_m2 = 180
     energy_proposals = []
+
+    building = build_analysis_input(first_building)
+
+    building["energy_proposals"] = energy_proposals
 
     if emo_username and emo_password:
         grund_id = first_building.get("grund")
