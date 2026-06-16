@@ -502,6 +502,8 @@ def analyze_bbr_address(q: str):
 
     building = build_analysis_input(first_building)
 
+    building["energy_proposals"] = energy_proposals
+
     energy_label_data = None
     energy_details = None
     energy_consumption_kwh_m2 = 180

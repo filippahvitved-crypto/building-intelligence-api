@@ -76,6 +76,20 @@ def calculate_building_analysis(building):
         consumption_score * 0.15
     )
 
+    energy_proposals = building.get("energy_proposals", [])
+
+    recommended_proposal_count = len(energy_proposals)
+
+    total_recommended_investment = sum(
+        proposal.get("investment") or 0
+        for proposal in energy_proposals
+    )
+
+    total_recommended_savings = sum(
+        proposal.get("money_saving") or 0
+        for proposal in energy_proposals
+    )
+
     if final_score >= 75:
         priority = "High"
         recommended_action = "Prioritize renovation immediately"
@@ -184,6 +198,9 @@ def calculate_building_analysis(building):
         "esg_risk_level": esg_risk_level,
         "risk_flags": risk_flags,
         "explanation": explanation,
+        "recommended_proposal_count": recommended_proposal_count,
+        "total_recommended_investment": total_recommended_investment,
+        "total_recommended_savings": total_recommended_savings,
         "breakdown": {
             "energy_label_score": energy_label_score,
             "building_year_score": year_score,
