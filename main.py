@@ -503,6 +503,8 @@ def analyze_bbr_address(q: str):
     building = build_analysis_input(first_building)
 
     energy_label_data = None
+    energy_details = None
+    energy_consumption_kwh_m2 = 180
 
     if emo_username and emo_password:
         grund_id = first_building.get("grund")
@@ -527,15 +529,34 @@ def analyze_bbr_address(q: str):
 
             energy_label_data = get_latest_energy_label(energy_search)
 
+            if energy_label_data:
+                entity_identifier = energy_label_data.get("EntityIdentifier")
+
+                energy_details = get_energy_label_details(
+                    emo_username,
+                    emo_password,
+                    entity_identifier
+                )
+
+                calculated_consumption = get_energy_consumption_per_m2(
+                    energy_details["data"],
+                    first_building.get("byg038SamletBygningsareal")
+                )
+
+                if calculated_consumption:
+                    energy_consumption_kwh_m2 = calculated_consumption
+
     if energy_label_data:
         building["energy_label"] = energy_label_data.get(
             "EnergyLabelClassification",
             "E"
         )
-        data_status = "Building year and heating type from BBR. Energy label from EMO. Energy consumption is temporary."
+        data_status = "Building year and heating type from BBR. Energy label and energy consumption from EMO."
     else:
         building["energy_label"] = "E"
-        data_status = "Building year and heating type from BBR. Energy label and consumption are temporary."
+        data_status = "Building year and heating type from BBR. Energy label and energy consumption are temporary."
+
+    building["energy_consumption_kwh_m2"] = energy_consumption_kwh_m2
 
     analysis = calculate_building_analysis(building)
 

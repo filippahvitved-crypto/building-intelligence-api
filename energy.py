@@ -60,3 +60,23 @@ def get_energy_label_details(
         "status_code": response.status_code,
         "data": response.json()
     }
+
+def get_energy_consumption_per_m2(
+    energy_details,
+    building_area
+):
+
+    try:
+        total_consumption = float(
+            energy_details["ProposalCalculation"]["CalculatedEnergyConsumption"]
+        )
+
+        area = float(building_area)
+
+        if area <= 0:
+            return None
+
+        return round(total_consumption / area, 1)
+
+    except Exception:
+        return None
